@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database.js'
-import { Character } from './Character.js'
 import { Genre } from './Genre.js'
 
 export const Movie = sequelize.define('Movie', {

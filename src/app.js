@@ -5,6 +5,6 @@ import characterRoutes from './v1/routes/characterRoutes.js'
 const app = express()
 
 app.use(bodyParser.json())
-app.use('/api/v1/users/', characterRoutes)
+app.use('/api/v1/characters', characterRoutes)
 
 export default app

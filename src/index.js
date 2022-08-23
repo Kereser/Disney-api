@@ -3,7 +3,7 @@ import { sequelize } from './database/database.js'
 
 async function main() {
   try {
-    await sequelize.sync()
+    await sequelize.sync({ alert: true })
     app.listen(3000, () => {
       console.log('Server listening on 3000')
     })
