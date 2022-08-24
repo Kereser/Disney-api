@@ -1,4 +1,4 @@
-import { Movie } from '../models/Movie.js'
+const { Movie } = require('../models/Movie')
 
 const getOneMovie = async (id) => {
   const movie = await Movie.findByPk(id)
@@ -11,7 +11,7 @@ const createNewMovie = async (newMovie) => {
   return movie
 }
 
-export default {
+module.exports = {
   getOneMovie,
   createNewMovie,
 }

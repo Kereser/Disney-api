@@ -1,11 +1,12 @@
-import { dbError } from '../../errors/errorsMessages.js'
-import { Character } from '../models/Character.js'
+const { dbError } = require('../../errors/errorsMessages')
+const { Character } = require('../models/Character')
 
 const getAllCharacters = async () => {
   try {
     const res = await Character.findAll()
-    return res.toJSON()
+    return res.length > 0 ? res : []
   } catch (error) {
+    console.error('ERROR', error)
     throw new dbError(error.message)
   }
 }
@@ -32,7 +33,7 @@ const getOneCharacter = async (id) => {
   }
 }
 
-export default {
+module.exports = {
   getAllCharacters,
   createNewCharacter,
   updateCharacter,

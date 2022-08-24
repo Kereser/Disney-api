@@ -1,11 +1,12 @@
-import characterService from '../services/characterService.js'
+const characterService = require('../services/characterService')
 
 const getAllCharacters = async (req, res) => {
   try {
     const character = await characterService.getAllCharacters()
+    console.log(character)
     res.send(character)
   } catch (error) {
-    res.status(error.statusCode).send(error.errMsg())
+    res.status(error.statusCode).send({ errors: error.errMsg() })
   }
 }
 
@@ -60,7 +61,7 @@ const updateCharacter = async (req, res) => {
 //? Asi puedo crear peliculas donde meta de una personas o visceversa y para actualizar de hecho puedo enviar en el cuerpo de la request los ids en un array para agregar este pj o pelicula a su respectivo par!
 //* Esto definitivamente es mejor que por parametros.
 
-export default {
+module.exports = {
   getAllCharacters,
   createNewCharacter,
   updateCharacter,

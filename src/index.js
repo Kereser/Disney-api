@@ -1,6 +1,7 @@
-import app from './app.js'
-import { sequelize } from './database/database.js'
+const { app } = require('./app')
+const { sequelize } = require('./database/database')
 
+//! En el archivo de test, forzar la sincronizacion y asi podria crear las tablas antes de todas las pruebas.
 async function main() {
   try {
     await sequelize.sync({ alert: true })

@@ -1,3 +1,5 @@
-export const MOVIEMODEL = 'Movie'
-export const CHARACTERMODEL = 'Character'
-export const GENREMODEL = 'Genre'
+const MOVIEMODEL = 'Movie'
+const CHARACTERMODEL = 'Character'
+const GENREMODEL = 'Genre'
+
+module.exports = { MOVIEMODEL, CHARACTERMODEL, GENREMODEL }

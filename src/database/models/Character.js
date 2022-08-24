@@ -1,8 +1,8 @@
-import { DataTypes } from 'sequelize'
-import { sequelize } from '../database.js'
-import { Movie } from './Movie.js'
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../database')
+const { Movie } = require('./Movie')
 
-export const Character = sequelize.define('Character', {
+const Character = sequelize.define('Character', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -17,3 +17,7 @@ export const Character = sequelize.define('Character', {
 
 Character.belongsToMany(Movie, { through: 'CharacterMovies' })
 Movie.belongsToMany(Character, { through: 'CharacterMovies' })
+
+module.exports = {
+  Character,
+}

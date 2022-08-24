@@ -1,4 +1,4 @@
-export class BadRequestError {
+class BadRequestError {
   statusCode = 400
 
   constructor(msg) {
@@ -10,7 +10,7 @@ export class BadRequestError {
   }
 }
 
-export class dbError {
+class dbError {
   statusCode = 500
 
   constructor(msg) {
@@ -20,4 +20,9 @@ export class dbError {
   errMsg() {
     return [{ message: this.reason }]
   }
+}
+
+module.exports = {
+  BadRequestError,
+  dbError,
 }

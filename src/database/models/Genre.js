@@ -1,15 +1,19 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from '../database.js'
+const { DataTypes } = require('sequelize')
+const { sequelize } = require('../database')
 
-export const Genre = sequelize.define('Genre', {
+const Genre = sequelize.define('Genre', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
-    primaryKey: true
+    primaryKey: true,
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
-  image: DataTypes.STRING
+  image: DataTypes.STRING,
 })
+
+module.exports = {
+  Genre,
+}

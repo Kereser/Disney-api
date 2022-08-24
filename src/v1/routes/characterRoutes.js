@@ -1,6 +1,5 @@
-import characterController from '../../controllers/characterController.js'
-
-import express from 'express'
+const characterController = require('../../controllers/characterController')
+const express = require('express')
 const router = express.Router()
 
 router.get('/', characterController.getAllCharacters)
@@ -11,4 +10,4 @@ router.post('/', characterController.createNewCharacter)
 
 router.put('/:characterId', characterController.updateCharacter)
 
-export default router
+module.exports = router

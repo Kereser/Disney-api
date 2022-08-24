@@ -1,8 +1,8 @@
-import movieRepository from '../database/respository/movieRepository.js'
-import { BadRequestError } from '../errors/errorsMessages.js'
-import { MOVIEMODEL } from './variables.js'
+const { movieRepository } = require('../database/respository/movieRepository')
+const { BadRequestError } = require('../errors/errorsMessages')
+const { MOVIEMODEL } = require('./variables')
 
-export const validateIds = async (ids, model) => {
+const validateIds = async (ids, model) => {
   if (model === MOVIEMODEL) {
     let moviesInstance = []
     for (const movieId of ids) {
@@ -21,3 +21,5 @@ export const validateIds = async (ids, model) => {
     return moviesInstance
   }
 }
+
+module.exports = { validateIds }

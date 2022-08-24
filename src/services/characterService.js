@@ -1,7 +1,7 @@
-import characterRepository from '../database/respository/characterRepository.js'
-import { BadRequestError } from '../errors/errorsMessages.js'
-import { validateIds } from '../utils/validateIds.js'
-import { MOVIEMODEL } from '../utils/variables.js'
+const characterRepository = require('../database/respository/characterRepository')
+const { BadRequestError } = require('../errors/errorsMessages')
+const { validateIds } = require('../utils/validateIds')
+const { MOVIEMODEL } = require('../utils/variables')
 
 const getAllCharacters = async () => {
   try {
@@ -36,8 +36,7 @@ const createNewCharacter = async (newCharacter) => {
       for (const movieInstance of moviesInstance) {
         res.addMovie(movieInstance)
       }
-      const { image, name } = res
-      return { image, name }
+      return res
     } catch (error) {
       throw error
     }
@@ -46,8 +45,7 @@ const createNewCharacter = async (newCharacter) => {
   try {
     delete newCharacter.movies
     const res = await characterRepository.createNewCharacter(newCharacter)
-    const { image, name } = res
-    return { image, name }
+    return res
   } catch (error) {
     throw error
   }
@@ -104,7 +102,7 @@ const updateCharacter = async (characterId, updatedCharacter) => {
   }
 }
 
-export default {
+module.exports = {
   getAllCharacters,
   createNewCharacter,
   updateCharacter,
