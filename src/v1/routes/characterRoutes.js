@@ -5,13 +5,10 @@ const router = express.Router()
 
 router.get('/', characterController.getAllCharacters)
 
+router.get('/:characterId', characterController.getOneCharacter)
+
 router.post('/', characterController.createNewCharacter)
 
-router.put(
-  '/:characterId/movies/:movieId',
-  characterController.updateCharacterMovie,
-)
-
-router.put('/:characterId')
+router.put('/:characterId', characterController.updateCharacter)
 
 export default router

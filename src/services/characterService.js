@@ -1,30 +1,104 @@
 import characterRepository from '../database/respository/characterRepository.js'
+import { BadRequestError } from '../errors/errorsMessages.js'
+import { validateIds } from '../utils/validateIds.js'
+import { MOVIEMODEL } from '../utils/variables.js'
 
 const getAllCharacters = async () => {
-  return await characterRepository.getAllCharacters()
+  try {
+    return await characterRepository.getAllCharacters()
+  } catch (error) {
+    throw error
+  }
+}
+
+const getOneCharacter = async (characterId) => {
+  try {
+    const character = await characterRepository.getOneCharacter(characterId)
+    if (!character) {
+      throw new BadRequestError('Not character found')
+    }
+    return character
+  } catch (error) {
+    throw error
+  }
 }
 
 const createNewCharacter = async (newCharacter) => {
-  //!Validaciones de logica como verificar si el usuario esta o no!
+  if (newCharacter.movies) {
+    let moviesInstance
+    try {
+      moviesInstance = await validateIds(newCharacter.movies, MOVIEMODEL)
+    } catch (error) {
+      throw error
+    }
+    try {
+      const res = await characterRepository.createNewCharacter(newCharacter)
+      for (const movieInstance of moviesInstance) {
+        res.addMovie(movieInstance)
+      }
+      const { image, name } = res
+      return { image, name }
+    } catch (error) {
+      throw error
+    }
+  }
 
   try {
+    delete newCharacter.movies
     const res = await characterRepository.createNewCharacter(newCharacter)
     const { image, name } = res
     return { image, name }
   } catch (error) {
-    console.error(error)
+    throw error
   }
 }
 
-const updateCharacterMovie = async (characterId, movieId) => {
-  //!Validaciones de logica como verificar si el usuario esta o no!
-  //!Validaciones de logica como verificar si la pelicula esta o no!
+const updateCharacter = async (characterId, updatedCharacter) => {
+  //! Extraer esta parte a validateCharacter.js
+  //**
+  let character
+  try {
+    // look if the characterId is on correct format
+    character = await characterRepository.getOneCharacter(characterId)
+    if (!character) {
+      throw new BadRequestError('Not character found')
+    }
+  } catch (error) {
+    throw error
+  }
+
+  if (updateCharacter.movies) {
+    let moviesInstance
+    try {
+      moviesInstance = await validateIds(newCharacter.movies, MOVIEMODEL)
+    } catch (error) {
+      throw error
+    }
+
+    try {
+      //* Crear tablas para poder comprobar el comportamiento.
+      //* Probar dos opcione:
+      //! Primera -> borrar todas las movies y pasar el objeto que me llego del user para actualizarlo. Luego, anadir las nuevas movies que habian llegado con el updatedCharacter
+      //! Segunda -> Otra opcion es porbar con el set. Tengo que mirar como es el tema de la actualizacion en ese sentido..
+      const res = await characterRepository.updateCharacter(
+        characterId,
+        updatedCharacter,
+      )
+      for (const movieInstance of moviesInstance) {
+        res.addMovie(movieInstance)
+      }
+      return res
+    } catch (error) {
+      throw error
+    }
+  }
 
   try {
-    const res = await characterRepository.updateCharacterMovie(
+    const res = await characterRepository.updateCharacter(
       characterId,
-      movieId,
+      updatedCharacter,
     )
+    return res
   } catch (error) {
     console.error(error)
   }
@@ -33,5 +107,6 @@ const updateCharacterMovie = async (characterId, movieId) => {
 export default {
   getAllCharacters,
   createNewCharacter,
-  updateCharacterMovie,
+  updateCharacter,
+  getOneCharacter,
 }
