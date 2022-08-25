@@ -1,8 +1,8 @@
 class BadRequestError {
   statusCode = 400
 
-  constructor(msg) {
-    this.reason = msg
+  constructor(reason) {
+    this.reason = reason
   }
 
   errMsg() {
@@ -10,7 +10,7 @@ class BadRequestError {
   }
 }
 
-class dbError {
+class DbError {
   statusCode = 500
 
   constructor(msg) {
@@ -22,7 +22,21 @@ class dbError {
   }
 }
 
+class NotFoundError {
+  statusCode = 404
+  reason = ' not found'
+
+  constructor(Model) {
+    this.reason = Model + this.reason
+  }
+
+  errMsg() {
+    return [{ message: this.reason }]
+  }
+}
+
 module.exports = {
   BadRequestError,
-  dbError,
+  DbError,
+  NotFoundError,
 }

@@ -10,4 +10,6 @@ router.post('/', characterController.createNewCharacter)
 
 router.put('/:characterId', characterController.updateCharacter)
 
+router.delete('/:characterId', characterController.deleteCharacter)
+
 module.exports = router

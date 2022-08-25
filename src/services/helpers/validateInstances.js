@@ -1,8 +1,8 @@
-const { movieRepository } = require('../database/respository/movieRepository')
-const { BadRequestError } = require('../errors/errorsMessages')
-const { MOVIEMODEL } = require('./variables')
+const movieRepository = require('../../database/respository/movieRepository')
+const { BadRequestError, DbError } = require('../../errors/errorsMessages')
+const { MOVIEMODEL } = require('../../utils/variables')
 
-const validateIds = async (ids, model) => {
+const validateInstances = async (ids, model) => {
   if (model === MOVIEMODEL) {
     let moviesInstance = []
     for (const movieId of ids) {
@@ -10,7 +10,7 @@ const validateIds = async (ids, model) => {
         const movie = await movieRepository.getOneMovie(movieId)
         moviesInstance.push(movie)
       } catch (error) {
-        throw new BadRequestError('Malformatted id(s)')
+        throw new DbError(error.message)
       }
     }
 
@@ -22,4 +22,4 @@ const validateIds = async (ids, model) => {
   }
 }
 
-module.exports = { validateIds }
+module.exports = { validateInstances }

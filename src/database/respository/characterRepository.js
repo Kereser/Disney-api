@@ -1,4 +1,4 @@
-const { dbError } = require('../../errors/errorsMessages')
+const { DbError } = require('../../errors/errorsMessages')
 const { Character } = require('../models/Character')
 
 const getAllCharacters = async () => {
@@ -7,7 +7,7 @@ const getAllCharacters = async () => {
     return res.length > 0 ? res : []
   } catch (error) {
     console.error('ERROR', error)
-    throw new dbError(error.message)
+    throw new DbError(error.message)
   }
 }
 
@@ -16,7 +16,7 @@ const createNewCharacter = async (newCharacter) => {
     const res = await Character.create(newCharacter)
     return res.toJSON()
   } catch (error) {
-    throw new dbError(error.message)
+    throw new DbError(error.message)
   }
 }
 
@@ -29,7 +29,24 @@ const getOneCharacter = async (id) => {
     const res = await Character.findByPk(id)
     return res ? res.toJSON() : null
   } catch (error) {
-    throw new dbError(error.message)
+    throw new DbError(error.message)
+  }
+}
+
+const getOneCharacterByName = async (characterName) => {
+  try {
+    const res = await Character.findOne({ where: { name: characterName } })
+    return res ? res.toJSON() : null
+  } catch (error) {
+    throw new DbError(error.message)
+  }
+}
+
+const deleteCharacter = async (characterId) => {
+  try {
+    await Character.destroy({ where: { id: characterId } })
+  } catch (error) {
+    throw new DbError(error.message)
   }
 }
 
@@ -38,4 +55,6 @@ module.exports = {
   createNewCharacter,
   updateCharacter,
   getOneCharacter,
+  getOneCharacterByName,
+  deleteCharacter,
 }

@@ -1,13 +1,17 @@
 const characterRepository = require('../database/respository/characterRepository')
-const { BadRequestError } = require('../errors/errorsMessages')
-const { validateIds } = require('../utils/validateIds')
+const { BadRequestError, NotFoundError } = require('../errors/errorsMessages')
+const { validateId } = require('./helpers/validateId')
+const { validateInstances } = require('./helpers/validateInstances')
 const { MOVIEMODEL } = require('../utils/variables')
+const { CHARACTERMODEL } = require('../utils/variables')
 
+//! Limitar la cantidad de recursos q envio por query params.
 const getAllCharacters = async () => {
   try {
     const allCharacters = await characterRepository.getAllCharacters()
     return allCharacters.map((character) => {
       return {
+        id: character.id,
         name: character.name,
         image: character.image,
       }
@@ -19,10 +23,7 @@ const getAllCharacters = async () => {
 
 const getOneCharacter = async (characterId) => {
   try {
-    const character = await characterRepository.getOneCharacter(characterId)
-    if (!character) {
-      throw new BadRequestError('Not character found')
-    }
+    const character = await validateId(CHARACTERMODEL, characterId)
     return character
   } catch (error) {
     throw error
@@ -30,10 +31,17 @@ const getOneCharacter = async (characterId) => {
 }
 
 const createNewCharacter = async (newCharacter) => {
+  const characterAlreadyInDb = await characterRepository.getOneCharacterByName(
+    newCharacter.name,
+  )
+  if (characterAlreadyInDb) {
+    throw new BadRequestError('User already in db')
+  }
+
   if (newCharacter.movies) {
     let moviesInstance
     try {
-      moviesInstance = await validateIds(newCharacter.movies, MOVIEMODEL)
+      moviesInstance = await validateInstances(newCharacter.movies, MOVIEMODEL)
     } catch (error) {
       throw error
     }
@@ -58,23 +66,17 @@ const createNewCharacter = async (newCharacter) => {
 }
 
 const updateCharacter = async (characterId, updatedCharacter) => {
-  //! Extraer esta parte a validateCharacter.js
   //**
-  let character
   try {
-    // look if the characterId is on correct format
-    character = await characterRepository.getOneCharacter(characterId)
-    if (!character) {
-      throw new BadRequestError('Not character found')
-    }
+    const character = await validateId(CHARACTERMODEL, characterId)
   } catch (error) {
     throw error
   }
 
-  if (updateCharacter.movies) {
+  if (updatedCharacter.movies) {
     let moviesInstance
     try {
-      moviesInstance = await validateIds(newCharacter.movies, MOVIEMODEL)
+      moviesInstance = await validateInstances(newCharacter.movies, MOVIEMODEL)
     } catch (error) {
       throw error
     }
@@ -108,9 +110,19 @@ const updateCharacter = async (characterId, updatedCharacter) => {
   }
 }
 
+const deleteCharacter = async (characterId) => {
+  try {
+    await validateId(CHARACTERMODEL, characterId)
+    await characterRepository.deleteCharacter(characterId)
+  } catch (error) {
+    throw error
+  }
+}
+
 module.exports = {
   getAllCharacters,
   createNewCharacter,
   updateCharacter,
   getOneCharacter,
+  deleteCharacter,
 }

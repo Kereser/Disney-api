@@ -3,7 +3,7 @@ const characterService = require('../services/characterService')
 const getAllCharacters = async (req, res) => {
   try {
     const character = await characterService.getAllCharacters()
-    res.send(character)
+    res.send({ data: character })
   } catch (error) {
     res.status(error.statusCode).send({ errors: error.errMsg() })
   }
@@ -14,7 +14,7 @@ const getOneCharacter = async (req, res) => {
 
   try {
     const character = await characterService.getOneCharacter(characterId)
-    res.send(character)
+    res.send({ data: character })
   } catch (error) {
     res.status(error.statusCode).send({
       errors: error.errMsg(),
@@ -35,7 +35,7 @@ const createNewCharacter = async (req, res) => {
 
   try {
     const character = await characterService.createNewCharacter(newCharacter)
-    res.status(201).send(character)
+    res.status(201).send({ data: character })
   } catch (error) {
     res.status(error.statusCode).send({ errors: error.errMsg() })
   }
@@ -60,9 +60,21 @@ const updateCharacter = async (req, res) => {
 //? Asi puedo crear peliculas donde meta de una personas o visceversa y para actualizar de hecho puedo enviar en el cuerpo de la request los ids en un array para agregar este pj o pelicula a su respectivo par!
 //* Esto definitivamente es mejor que por parametros.
 
+const deleteCharacter = async (req, res) => {
+  const { characterId } = req.params
+
+  try {
+    await characterService.deleteCharacter(characterId)
+    res.status(204).send({})
+  } catch (error) {
+    res.status(error.statusCode).send({ errors: error.errMsg() })
+  }
+}
+
 module.exports = {
   getAllCharacters,
   createNewCharacter,
   updateCharacter,
   getOneCharacter,
+  deleteCharacter,
 }
