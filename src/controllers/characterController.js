@@ -3,7 +3,6 @@ const characterService = require('../services/characterService')
 const getAllCharacters = async (req, res) => {
   try {
     const character = await characterService.getAllCharacters()
-    console.log(character)
     res.send(character)
   } catch (error) {
     res.status(error.statusCode).send({ errors: error.errMsg() })

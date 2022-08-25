@@ -5,7 +5,13 @@ const { MOVIEMODEL } = require('../utils/variables')
 
 const getAllCharacters = async () => {
   try {
-    return await characterRepository.getAllCharacters()
+    const allCharacters = await characterRepository.getAllCharacters()
+    return allCharacters.map((character) => {
+      return {
+        name: character.name,
+        image: character.image,
+      }
+    })
   } catch (error) {
     throw error
   }

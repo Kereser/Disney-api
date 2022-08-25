@@ -1,8 +1,7 @@
-const Sequelize = require('sequelize')
+const { sequelize } = require('../database/database')
 
-const sequelize = new Sequelize('disney', 'postgres', '112233dfg..', {
-  host: 'localhost',
-  dialect: 'postgres',
+beforeAll(async () => {
+  await sequelize.sync()
 })
 
 beforeEach(async () => {
@@ -10,5 +9,6 @@ beforeEach(async () => {
 })
 
 afterAll(async () => {
+  await sequelize.sync({ force: true })
   await sequelize.close()
 })
