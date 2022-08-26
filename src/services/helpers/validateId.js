@@ -1,5 +1,4 @@
-const { CHARACTERMODEL } = require('../../utils/variables')
-const { MOVIEMODEL } = require('../../utils/variables')
+const { CHARACTERMODEL, MOVIEMODEL } = require('../../utils/variables')
 const characterRepository = require('../../database/respository/characterRepository')
 const {
   BadRequestError,

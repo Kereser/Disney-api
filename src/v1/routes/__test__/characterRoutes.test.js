@@ -62,13 +62,15 @@ describe('Require a character already in db', () => {
     const resCharacter = await api.get(`/api/v1/characters/${id}`)
 
     expect(resCharacter.statusCode).toBe(404)
-    expect(resCharacter.body.errors[0].message).toContain('not found')
+    expect(resCharacter.body.errors[0].message).toBe('Character not found')
   })
 
   it('Cannot get the character if malformatted id --- return 400', async () => {
     const resCharacter = await api.get(`/api/v1/characters/2905230958skgjskld`)
     expect(resCharacter.statusCode).toBe(400)
-    expect(resCharacter.body.errors[0].message).toContain('must be a valid id')
+    expect(resCharacter.body.errors[0].message).toBe(
+      'characterId must be a valid id',
+    )
   })
 })
 
@@ -87,14 +89,14 @@ describe('Deleting a character', () => {
     expect(res.statusCode).toBe(404)
     expect(res.body.errors[0].message).toBeDefined()
     expect(res.body.errors[0].message).not.toBe('Route not found')
-    expect(res.body.errors[0].message).toContain('not found')
+    expect(res.body.errors[0].message).toBe('Character not found')
   })
 
   it('Cannot delete a character with malformatted id -- return 400', async () => {
     const res = await api.delete(`/api/v1/characters/2905230958skgjskld`)
 
     expect(res.statusCode).toBe(400)
-    expect(res.body.errors[0].message).toContain('must be a valid id')
+    expect(res.body.errors[0].message).toBe('characterId must be a valid id')
   })
 
   it('Can delete a character with validId --- return 204', async () => {
@@ -119,7 +121,7 @@ describe('Updating user', () => {
     const res = await api.put('/api/v1/characters/823765fkdgj;lskd')
 
     expect(res.statusCode).toBe(400)
-    expect(res.body.errors[0].message).toContain('must be a valid id')
+    expect(res.body.errors[0].message).toBe('characterId must be a valid id')
   })
 
   it('Cannot update if character not found --- return 404', async () => {
@@ -127,7 +129,7 @@ describe('Updating user', () => {
 
     const res = await api.put(`/api/v1/characters/${id}`)
     expect(res.statusCode).toBe(404)
-    expect(res.body.errors[0].message).toContain('not found')
+    expect(res.body.errors[0].message).toBe('Character not found')
   })
 
   it('Can update a user in simple fields --- return 200', async () => {

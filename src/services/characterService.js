@@ -1,13 +1,10 @@
 const characterRepository = require('../database/respository/characterRepository')
-const {
-  BadRequestError,
-  NotFoundError,
-  DbError,
-} = require('../errors/errorsMessages')
+const { BadRequestError } = require('../errors/errorsMessages')
 const { validateId } = require('./helpers/validateId')
 const { validateInstances } = require('./helpers/validateInstances')
 const { MOVIEMODEL } = require('../utils/variables')
 const { CHARACTERMODEL } = require('../utils/variables')
+const { alreayInDb } = require('./helpers/alreayInDb')
 
 //! Limitar la cantidad de recursos q envio por query params.
 const getAllCharacters = async () => {
@@ -38,11 +35,7 @@ const getOneCharacter = async (characterId) => {
 
 const createNewCharacter = async (newCharacter) => {
   try {
-    const characterAlreadyInDb =
-      await characterRepository.getOneCharacterByName(newCharacter.name)
-    if (characterAlreadyInDb) {
-      throw new BadRequestError('Character already in db')
-    }
+    await alreayInDb(CHARACTERMODEL, newCharacter)
   } catch (error) {
     throw error
   }

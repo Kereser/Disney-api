@@ -1,14 +1,10 @@
 const movieRepository = require('../database/respository/movieRepository')
-const { BadRequestError, DbError } = require('../errors/errorsMessages')
+const { MOVIEMODEL } = require('../utils/variables')
+const { alreayInDb } = require('./helpers/alreayInDb')
 
 const createNewMovie = async (newMovie) => {
   try {
-    const movieAlreadyInDb = await movieRepository.getMovieByTitle(
-      newMovie.title,
-    )
-    if (movieAlreadyInDb) {
-      throw new BadRequestError('Movie already in db')
-    }
+    await alreayInDb(MOVIEMODEL, newMovie)
   } catch (error) {
     throw error
   }
