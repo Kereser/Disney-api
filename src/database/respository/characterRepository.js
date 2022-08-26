@@ -6,7 +6,6 @@ const getAllCharacters = async () => {
     const res = await Character.findAll()
     return res.length > 0 ? res : []
   } catch (error) {
-    console.error('ERROR', error)
     throw new DbError(error.message)
   }
 }
@@ -14,20 +13,23 @@ const getAllCharacters = async () => {
 const createNewCharacter = async (newCharacter) => {
   try {
     const res = await Character.create(newCharacter)
-    return res.toJSON()
+    return res
   } catch (error) {
     throw new DbError(error.message)
   }
 }
 
-const updateCharacter = async (characterId, updatedCharacter) => {
-  return 'Impelementar logica.'
+const updateCharacter = async (characterId, fieldToUpdate) => {
+  const characterToUpdate = await Character.findByPk(characterId)
+
+  characterToUpdate.set(fieldToUpdate)
+  return await characterToUpdate.save()
 }
 
 const getOneCharacter = async (id) => {
   try {
     const res = await Character.findByPk(id)
-    return res ? res.toJSON() : null
+    return res ? res : null
   } catch (error) {
     throw new DbError(error.message)
   }
@@ -36,7 +38,7 @@ const getOneCharacter = async (id) => {
 const getOneCharacterByName = async (characterName) => {
   try {
     const res = await Character.findOne({ where: { name: characterName } })
-    return res ? res.toJSON() : null
+    return res ? res : null
   } catch (error) {
     throw new DbError(error.message)
   }

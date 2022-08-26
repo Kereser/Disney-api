@@ -1,0 +1,42 @@
+const movieRepository = require('../database/respository/movieRepository')
+const { BadRequestError, DbError } = require('../errors/errorsMessages')
+
+const createNewMovie = async (newMovie) => {
+  try {
+    const movieAlreadyInDb = await movieRepository.getMovieByTitle(
+      newMovie.title,
+    )
+    if (movieAlreadyInDb) {
+      throw new BadRequestError('Movie already in db')
+    }
+  } catch (error) {
+    throw error
+  }
+
+  try {
+    const responseMovie = await movieRepository.createNewMovie(newMovie)
+    return responseMovie
+  } catch (error) {
+    throw error
+  }
+}
+
+const getAllMovies = async () => {
+  try {
+    const responseMovies = await movieRepository.getAllMovies()
+    return responseMovies.length > 0
+      ? responseMovies.map((movie) => {
+          return {
+            image: movie.image,
+            title: movie.title,
+            creationDate: movie.creationDate,
+            id: movie.id,
+          }
+        })
+      : responseMovies
+  } catch (error) {
+    throw error
+  }
+}
+
+module.exports = { createNewMovie, getAllMovies }

@@ -5,14 +5,13 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll --runInBand"
   },
   "jest": {
     "testEnvironment": "node",
     "setupFilesAfterEnv": [
       "./src/test/setup.js"
-    ],
-    "transform": {}
+    ]
   },
   "keywords": [],
   "author": "",

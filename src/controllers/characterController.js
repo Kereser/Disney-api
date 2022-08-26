@@ -43,14 +43,13 @@ const createNewCharacter = async (req, res) => {
 
 const updateCharacter = async (req, res) => {
   const { characterId } = req.params
-  const updatedCharacter = req.body
 
   try {
-    const res = await characterService.updateCharacter(
+    const character = await characterService.updateCharacter(
       characterId,
-      updatedCharacter,
+      req.body,
     )
-    return res
+    res.status(200).send({ data: character })
   } catch (error) {
     res.status(error.statusCode).send({ errors: error.errMsg() })
   }
@@ -65,7 +64,7 @@ const deleteCharacter = async (req, res) => {
 
   try {
     await characterService.deleteCharacter(characterId)
-    res.status(204).send({})
+    res.sendStatus(204)
   } catch (error) {
     res.status(error.statusCode).send({ errors: error.errMsg() })
   }

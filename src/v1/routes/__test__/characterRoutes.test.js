@@ -9,22 +9,22 @@ describe('Creating a character', () => {
   it('Can create new Character --- return 201', async () => {
     const res = await api.post('/api/v1/characters').send(charUtil.NEWCHARACTER)
     expect(res.statusCode).toBe(201)
-    expect(res.body.data.name).toEqual('Juanito perez')
-    expect(res.body.data.weight).toEqual(234.5)
+    expect(res.body.data.name).toEqual(charUtil.NEWCHARACTER.name)
+    expect(res.body.data.weight).toEqual(charUtil.NEWCHARACTER.weight)
   })
 
   it('Cannot create characters with the same name --- return 400', async () => {
     const res = await api.post('/api/v1/characters').send(charUtil.NEWCHARACTER)
     expect(res.statusCode).toBe(201)
     expect(res.body.data.name).toEqual(charUtil.NEWCHARACTER.name)
-    expect(res.body.data.weight).toEqual(234.5)
+    expect(res.body.data.weight).toEqual(charUtil.NEWCHARACTER.weight)
 
     const res2 = await api
       .post('/api/v1/characters')
       .send(charUtil.NEWCHARACTER)
 
     expect(res2.statusCode).toBe(400)
-    expect(res2.body.errors[0].message).toBe('User already in db')
+    expect(res2.body.errors[0].message).toBe('Character already in db')
   })
 })
 
@@ -105,5 +105,43 @@ describe('Deleting a character', () => {
     const allCharacters = await api.get('/api/v1/characters')
     expect(allCharacters.statusCode).toBe(200)
     expect(allCharacters.body.data).toHaveLength(0)
+  })
+})
+
+describe('Updating user', () => {
+  let character1
+  beforeEach(async () => {
+    character1 = await api
+      .post('/api/v1/characters')
+      .send(charUtil.NEWCHARACTER)
+  })
+  it('Cannot update if malformatted id --- return 400', async () => {
+    const res = await api.put('/api/v1/characters/823765fkdgj;lskd')
+
+    expect(res.statusCode).toBe(400)
+    expect(res.body.errors[0].message).toContain('must be a valid id')
+  })
+
+  it('Cannot update if character not found --- return 404', async () => {
+    const id = uuidv4()
+
+    const res = await api.put(`/api/v1/characters/${id}`)
+    expect(res.statusCode).toBe(404)
+    expect(res.body.errors[0].message).toContain('not found')
+  })
+
+  it('Can update a user in simple fields --- return 200', async () => {
+    const { id } = character1.body.data
+
+    const newCharacter = {
+      name: 'Pepito moreno',
+      age: 34,
+    }
+    const res = await api.put(`/api/v1/characters/${id}`).send(newCharacter)
+
+    expect(res.statusCode).toBe(200)
+    expect(res.body.data.name).toBe(newCharacter.name)
+    expect(res.body.data.age).toBe(34)
+    expect(res.body.data.image).toBe(character1.body.data.image)
   })
 })

@@ -1,7 +1,7 @@
 const { sequelize } = require('../database/database')
 
 beforeAll(async () => {
-  await sequelize.sync()
+  await sequelize.sync({ force: true })
 })
 
 beforeEach(async () => {
@@ -9,6 +9,6 @@ beforeEach(async () => {
 })
 
 afterAll(async () => {
-  await sequelize.sync({ force: true })
+  await sequelize.drop()
   await sequelize.close()
 })
