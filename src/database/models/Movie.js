@@ -17,7 +17,7 @@ const Movie = sequelize.define('Movie', {
     type: DataTypes.DATE,
     allowNull: false,
   },
-  calification: DataTypes.INTEGER,
+  calification: DataTypes.DOUBLE,
 })
 
 Movie.belongsToMany(Genre, { through: 'MovieGenres' })

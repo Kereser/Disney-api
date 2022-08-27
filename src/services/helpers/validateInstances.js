@@ -2,7 +2,7 @@ const movieRepository = require('../../database/respository/movieRepository')
 const { BadRequestError, DbError } = require('../../errors/errorsMessages')
 const { MOVIEMODEL } = require('../../utils/variables')
 
-const validateInstances = async (ids, model) => {
+const validateInstances = async (model, ids) => {
   if (model === MOVIEMODEL) {
     let moviesInstance = []
     for (const movieId of ids) {

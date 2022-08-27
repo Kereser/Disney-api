@@ -20,10 +20,14 @@ const createNewCharacter = async (newCharacter) => {
 }
 
 const updateCharacter = async (characterId, fieldToUpdate) => {
-  const characterToUpdate = await Character.findByPk(characterId)
+  try {
+    const characterToUpdate = await Character.findByPk(characterId)
 
-  characterToUpdate.set(fieldToUpdate)
-  return await characterToUpdate.save()
+    characterToUpdate.set(fieldToUpdate)
+    return await characterToUpdate.save()
+  } catch (error) {
+    throw new DbError(error.message)
+  }
 }
 
 const getOneCharacter = async (id) => {

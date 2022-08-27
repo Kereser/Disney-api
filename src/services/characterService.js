@@ -43,7 +43,7 @@ const createNewCharacter = async (newCharacter) => {
   if (newCharacter.movies) {
     let moviesInstance
     try {
-      moviesInstance = await validateInstances(newCharacter.movies, MOVIEMODEL)
+      moviesInstance = await validateInstances(MOVIEMODEL, newCharacter.movies)
     } catch (error) {
       throw error
     }
@@ -78,7 +78,7 @@ const updateCharacter = async (characterId, fieldToUpdate) => {
   if (fieldToUpdate.movies) {
     let moviesInstance
     try {
-      moviesInstance = await validateInstances(newCharacter.movies, MOVIEMODEL)
+      moviesInstance = await validateInstances(MOVIEMODEL, newCharacter.movies)
     } catch (error) {
       throw error
     }

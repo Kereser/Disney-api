@@ -28,6 +28,38 @@ describe('Creating a character', () => {
   })
 })
 
+describe('Not require characters in db', () => {
+  describe('Getting one character', () => {
+    it('Cannot get the character if malformatted id --- return 400', async () => {
+      const resCharacter = await api.get(
+        `/api/v1/characters/2905230958skgjskld`,
+      )
+      expect(resCharacter.statusCode).toBe(400)
+      expect(resCharacter.body.errors[0].message).toBe(
+        'characterId must be a valid id',
+      )
+    })
+  })
+
+  describe('Deleting one character', () => {
+    it('Cannot delete a character with malformatted id -- return 400', async () => {
+      const res = await api.delete(`/api/v1/characters/2905230958skgjskld`)
+
+      expect(res.statusCode).toBe(400)
+      expect(res.body.errors[0].message).toBe('characterId must be a valid id')
+    })
+  })
+
+  describe('Updating one character', () => {
+    it('Cannot update if malformatted id --- return 400', async () => {
+      const res = await api.put('/api/v1/characters/823765fkdgj;lskd')
+
+      expect(res.statusCode).toBe(400)
+      expect(res.body.errors[0].message).toBe('characterId must be a valid id')
+    })
+  })
+})
+
 describe('Require a character already in db', () => {
   let character1
   beforeEach(async () => {
@@ -37,40 +69,35 @@ describe('Require a character already in db', () => {
     await api.post('/api/v1/characters').send(charUtil.NEWCHARACTER2)
   })
 
-  it('Can get all character as an array with only name, image and id --- return 200', async () => {
-    const res = await api.get('/api/v1/characters')
+  describe('Getting all movies', () => {
+    it('Can get all character as an array with only name, image and id --- return 200', async () => {
+      const res = await api.get('/api/v1/characters')
 
-    expect(res.statusCode).toBe(200)
-    expect(res.body.data).toHaveLength(2)
-    expect(res.body.data[0].name).toEqual(character1.body.data.name)
-    expect(res.body.data[0].id).toBeDefined()
-    expect(res.body.data[0].weight).toBe(undefined)
+      expect(res.statusCode).toBe(200)
+      expect(res.body.data).toHaveLength(2)
+      expect(res.body.data[0].name).toEqual(character1.body.data.name)
+      expect(res.body.data[0].id).toBeDefined()
+      expect(res.body.data[0].weight).toBe(undefined)
+    })
   })
 
-  it('Can get one character by id --- return 200', async () => {
-    const { id } = character1.body.data
-    const resCharacter = await api.get(`/api/v1/characters/${id}`)
+  describe('Getting one movie', () => {
+    it('Can get one character by id --- return 200', async () => {
+      const { id } = character1.body.data
+      const resCharacter = await api.get(`/api/v1/characters/${id}`)
 
-    expect(resCharacter.statusCode).toBe(200)
-    expect(resCharacter.body.data.name).toEqual(character1.body.data.name)
-    expect(resCharacter.body.data.image).toEqual(character1.body.data.image)
-  })
+      expect(resCharacter.statusCode).toBe(200)
+      expect(resCharacter.body.data.name).toEqual(character1.body.data.name)
+      expect(resCharacter.body.data.image).toEqual(character1.body.data.image)
+    })
+    it('Cannot get the character if not found --- return 404', async () => {
+      const id = uuidv4()
 
-  it('Cannot get the character if not found --- return 404', async () => {
-    const id = uuidv4()
+      const resCharacter = await api.get(`/api/v1/characters/${id}`)
 
-    const resCharacter = await api.get(`/api/v1/characters/${id}`)
-
-    expect(resCharacter.statusCode).toBe(404)
-    expect(resCharacter.body.errors[0].message).toBe('Character not found')
-  })
-
-  it('Cannot get the character if malformatted id --- return 400', async () => {
-    const resCharacter = await api.get(`/api/v1/characters/2905230958skgjskld`)
-    expect(resCharacter.statusCode).toBe(400)
-    expect(resCharacter.body.errors[0].message).toBe(
-      'characterId must be a valid id',
-    )
+      expect(resCharacter.statusCode).toBe(404)
+      expect(resCharacter.body.errors[0].message).toBe('Character not found')
+    })
   })
 })
 
@@ -92,13 +119,6 @@ describe('Deleting a character', () => {
     expect(res.body.errors[0].message).toBe('Character not found')
   })
 
-  it('Cannot delete a character with malformatted id -- return 400', async () => {
-    const res = await api.delete(`/api/v1/characters/2905230958skgjskld`)
-
-    expect(res.statusCode).toBe(400)
-    expect(res.body.errors[0].message).toBe('characterId must be a valid id')
-  })
-
   it('Can delete a character with validId --- return 204', async () => {
     const { id } = character1.body.data
     const res = await api.delete(`/api/v1/characters/${id}`)
@@ -116,12 +136,6 @@ describe('Updating user', () => {
     character1 = await api
       .post('/api/v1/characters')
       .send(charUtil.NEWCHARACTER)
-  })
-  it('Cannot update if malformatted id --- return 400', async () => {
-    const res = await api.put('/api/v1/characters/823765fkdgj;lskd')
-
-    expect(res.statusCode).toBe(400)
-    expect(res.body.errors[0].message).toBe('characterId must be a valid id')
   })
 
   it('Cannot update if character not found --- return 404', async () => {

@@ -22,6 +22,20 @@ const NEWMOVIE = {
   creationDate: '2019-05-12',
 }
 
+const NEWMOVIE2 = {
+  image: 'El_Padrino.jpg',
+  title: 'El Padrino',
+  calification: 9.2,
+  creationDate: '1999-03-12',
+}
+
+const NEWMOVIE3 = {
+  image: 'El_Padrino_2.jpg',
+  title: 'El Padrino 2',
+  calification: 9.2,
+  creationDate: '1999-03-12',
+}
+
 const NONVALIDCHARACTER = {
   name: 'Juanito perez',
   age: 23,
@@ -39,4 +53,6 @@ module.exports = {
   NEWCHARACTER2,
   NEWMOVIE,
   NONVALIDCHARACTER,
+  NEWMOVIE2,
+  NEWMOVIE3,
 }

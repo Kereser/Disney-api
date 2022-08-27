@@ -5,7 +5,6 @@ const { BadRequestError } = require('../../errors/errorsMessages')
 
 const alreayInDb = async (model, instanceToCheck) => {
   if (model === MOVIEMODEL) {
-    console.log('Entro al movie model')
     try {
       const movieAlreadyInDb = await movieRepository.getMovieByTitle(
         instanceToCheck.title,

@@ -1,5 +1,6 @@
 const { CHARACTERMODEL, MOVIEMODEL } = require('../../utils/variables')
 const characterRepository = require('../../database/respository/characterRepository')
+const movieRepository = require('../../database/respository/movieRepository')
 const {
   BadRequestError,
   NotFoundError,
@@ -28,6 +29,24 @@ const validateId = async (model, id) => {
     }
 
     return character
+  }
+
+  if (model === MOVIEMODEL) {
+    const reg = /(\w{8}(-\w{4}){3}-\w{12}?)/
+    if (!reg.test(id)) {
+      throw new BadRequestError('movieId must be a valid id')
+    }
+    let movie
+    try {
+      character = await movieRepository.getOneMovie(id)
+      if (!character) {
+        throw new NotFoundError(MOVIEMODEL)
+      }
+    } catch (error) {
+      throw error
+    }
+
+    return movie
   }
 }
 
