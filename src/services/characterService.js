@@ -43,16 +43,20 @@ const createNewCharacter = async (newCharacter) => {
   if (newCharacter.movies) {
     let moviesInstance
     try {
+      for (const movieId of newCharacter.movies) {
+        await validateId(MOVIEMODEL, movieId)
+      }
       moviesInstance = await validateInstances(MOVIEMODEL, newCharacter.movies)
     } catch (error) {
       throw error
     }
+
     try {
-      const res = await characterRepository.createNewCharacter(newCharacter)
-      for (const movieInstance of moviesInstance) {
-        res.addMovie(movieInstance)
-      }
-      return res
+      const res = await characterRepository.createNewCharacter(
+        newCharacter,
+        moviesInstance,
+      )
+      return await characterRepository.getOneCharacter(res.id)
     } catch (error) {
       throw error
     }
@@ -78,23 +82,20 @@ const updateCharacter = async (characterId, fieldToUpdate) => {
   if (fieldToUpdate.movies) {
     let moviesInstance
     try {
-      moviesInstance = await validateInstances(MOVIEMODEL, newCharacter.movies)
+      for (const movieId of fieldToUpdate.movies) {
+        await validateId(MOVIEMODEL, movieId)
+      }
+      moviesInstance = await validateInstances(MOVIEMODEL, fieldToUpdate.movies)
     } catch (error) {
       throw error
     }
 
     try {
-      //* Crear tablas para poder comprobar el comportamiento.
-      //* Probar dos opcione:
-      //! Primera -> borrar todas las movies y pasar el objeto que me llego del user para actualizarlo. Luego, anadir las nuevas movies que habian llegado con el fieldToUpdate
-      //! Segunda -> Otra opcion es porbar con el set. Tengo que mirar como es el tema de la actualizacion en ese sentido..
       const res = await characterRepository.updateCharacter(
         characterId,
         fieldToUpdate,
+        moviesInstance,
       )
-      for (const movieInstance of moviesInstance) {
-        res.addMovie(movieInstance)
-      }
       return res
     } catch (error) {
       throw error

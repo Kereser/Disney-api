@@ -1,5 +1,5 @@
 const movieRepository = require('../../database/respository/movieRepository')
-const { BadRequestError, DbError } = require('../../errors/errorsMessages')
+const { DbError } = require('../../errors/errorsMessages')
 const { MOVIEMODEL } = require('../../utils/variables')
 
 const validateInstances = async (model, ids) => {
@@ -12,10 +12,6 @@ const validateInstances = async (model, ids) => {
       } catch (error) {
         throw new DbError(error.message)
       }
-    }
-
-    if (moviesInstance.some((movIns) => movIns === null)) {
-      throw new BadRequestError('Some movieIds are not in db')
     }
 
     return moviesInstance

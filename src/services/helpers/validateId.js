@@ -8,8 +8,8 @@ const {
 
 /**
  * Functions that helps verify id and user within db.
- * @param {*} model
- * @param {*} id
+ * @param {String} model
+ * @param {String} id
  * @returns Models.
  */
 const validateId = async (model, id) => {
