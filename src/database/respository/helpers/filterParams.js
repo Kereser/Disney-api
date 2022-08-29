@@ -1,8 +1,14 @@
-const { MOVIEMODEL, CHARACTERMODEL } = require('../../../utils/variables')
+const {
+  MOVIEMODEL,
+  CHARACTERMODEL,
+  GENREMODEL,
+} = require('../../../utils/variables')
 const { Movie } = require('../../models/Movie')
 const { Op } = require('sequelize')
 const { DbError } = require('../../../errors/errorsMessages')
 const { Character } = require('../../models/Character')
+const { Genre } = require('../../models/Genre')
+const { validateId } = require('../../../services/helpers/validateId')
 
 const constructFilters = (params, query) => {
   let filterArr = []
@@ -10,7 +16,6 @@ const constructFilters = (params, query) => {
     if (param === 'title') {
       filterArr.push({ [param]: { [Op.iLike]: `%${query[param]}%` } })
     }
-    //! Falta construir id de genre para filtrar por esto.
 
     //* Parte para character
     if (param === 'name') {
@@ -35,11 +40,23 @@ const filterParams = async (model, params, query) => {
   if (model === MOVIEMODEL) {
     const filters = constructFilters(params, query)
 
-    //TODO: HACER EL OBJFILTER SI SE ENCUENTRA CON QUERY.CHARACTER
+    if (query.genre) {
+      try {
+        await validateId(GENREMODEL, query.genre)
+      } catch (error) {
+        throw error
+      }
+    }
+
+    const objFilter = query.genre
+      ? {
+          where: filters,
+          include: { model: Genre, where: { id: query.genre } },
+        }
+      : { where: filters }
+
     try {
-      movieRes = await Movie.findAll({
-        where: filters,
-      })
+      movieRes = await Movie.findAll(objFilter)
       if (query.order === 'ASC') {
         return movieRes.sort(function (a, b) {
           if (a.title.toLowerCase() < b.title.toLowerCase()) return -1
@@ -62,12 +79,21 @@ const filterParams = async (model, params, query) => {
     let characterRes
     const filters = constructFilters(params, query)
 
+    if (query.movie) {
+      try {
+        await validateId(MOVIEMODEL, query.movie)
+      } catch (error) {
+        throw error
+      }
+    }
+
     const objFilter = query.movie
       ? {
           where: filters,
           include: { model: Movie, where: { id: query.movie } },
         }
       : { where: filters }
+
     try {
       characterRes = await Character.findAll(objFilter)
       return characterRes
@@ -77,6 +103,4 @@ const filterParams = async (model, params, query) => {
   }
 }
 
-module.exports = {
-  filterParams,
-}
+module.exports = { filterParams }

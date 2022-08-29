@@ -48,6 +48,22 @@ const NONVALIDCHARACTER = {
   image: 'juanito.jpg',
   express: 'non valid field',
 }
+const USER1 = {
+  email: 'test@test.com',
+  password: 'password',
+}
+const USER2 = {
+  email: 'test2@test2.com',
+  password: 'password',
+}
+const NONVALIDUSER1 = {
+  email: 'test2',
+  password: 'password',
+}
+const NONVALIDUSER2 = {
+  email: 'test2@test2.com',
+  password: 'pass',
+}
 
 module.exports = {
   MOVIEMODEL,
@@ -60,4 +76,8 @@ module.exports = {
   NONVALIDCHARACTER,
   NEWMOVIE2,
   NEWMOVIE3,
+  USER1,
+  USER2,
+  NONVALIDUSER1,
+  NONVALIDUSER2,
 }

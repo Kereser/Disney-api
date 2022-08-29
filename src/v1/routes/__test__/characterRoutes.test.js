@@ -14,18 +14,6 @@ describe('Not require characters in db', () => {
       expect(res.body.data.weight).toEqual(Utils.NEWCHARACTER.weight)
     })
 
-    it('Cannot create characters with the same name --- return 400', async () => {
-      const res = await api.post('/api/v1/characters').send(Utils.NEWCHARACTER)
-      expect(res.statusCode).toBe(201)
-      expect(res.body.data.name).toEqual(Utils.NEWCHARACTER.name)
-      expect(res.body.data.weight).toEqual(Utils.NEWCHARACTER.weight)
-
-      const res2 = await api.post('/api/v1/characters').send(Utils.NEWCHARACTER)
-
-      expect(res2.statusCode).toBe(400)
-      expect(res2.body.errors[0].message).toBe('Character already in db')
-    })
-
     it('Can create character with associated movies --- return 201', async () => {
       const movie = await api.post('/api/v1/movies').send(Utils.NEWMOVIE)
 
@@ -133,6 +121,15 @@ describe('Require characters already in db', () => {
       .send(characterMovie3)
   })
 
+  describe('Creating charcter', () => {
+    it('Cannot create characters with the same name --- return 400', async () => {
+      const res2 = await api.post('/api/v1/characters').send(Utils.NEWCHARACTER)
+
+      expect(res2.statusCode).toBe(400)
+      expect(res2.body.errors[0].message).toBe('Character already in db')
+    })
+  })
+
   describe('Getting all characters', () => {
     it('Can get all character as an array with only name, image and id --- return 200', async () => {
       const res = await api.get('/api/v1/characters')
@@ -191,9 +188,41 @@ describe('Require characters already in db', () => {
       expect(res.body.data).toHaveLength(1)
       expect(res.body.data[0].name).toBe(Utils.NEWCHARACTER3.name)
     })
+
+    it('Return empty array if not characters was found with filters --- return 200', async () => {
+      const res = await api.get(`/api/v1/characters?name=John Paulo`)
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.data).toHaveLength(0)
+    })
+
+    it('Cannot get characters if movieId malformatted --- return 400', async () => {
+      const res = await api.get(
+        `/api/v1/characters?movie=235325-25235-sdgsdg-235`,
+      )
+
+      expect(res.statusCode).toBe(400)
+      expect(res.body.errors[0].message).toBe('movieId must be a valid id')
+    })
+
+    it('Cannot get characters if movieId not found --- return 404', async () => {
+      const id = uuidv4()
+      const res = await api.get(`/api/v1/characters?movie=${id}`)
+
+      expect(res.statusCode).toBe(404)
+      expect(res.body.errors[0].message).toBe('Movie not found')
+    })
   })
 
   describe('Getting one character', () => {
+    it('Cannot get the character if not found --- return 404', async () => {
+      const id = uuidv4()
+      const resCharacter = await api.get(`/api/v1/characters/${id}`)
+
+      expect(resCharacter.statusCode).toBe(404)
+      expect(resCharacter.body.errors[0].message).toBe('Character not found')
+    })
+
     it('Can get one character with valid id --- return 200', async () => {
       const { id } = characterWithMovie.body.data
       const resCharacter = await api.get(`/api/v1/characters/${id}`)
@@ -219,14 +248,6 @@ describe('Require characters already in db', () => {
       expect(titles).toContain(Utils.NEWMOVIE.title.toLowerCase())
       expect(titles).toContain(Utils.NEWMOVIE2.title.toLowerCase())
       expect(resCharacter.body.data.Movies).toHaveLength(2)
-    })
-
-    it('Cannot get the character if not found --- return 404', async () => {
-      const id = uuidv4()
-      const resCharacter = await api.get(`/api/v1/characters/${id}`)
-
-      expect(resCharacter.statusCode).toBe(404)
-      expect(resCharacter.body.errors[0].message).toBe('Character not found')
     })
   })
 
@@ -279,7 +300,7 @@ describe('Require characters already in db', () => {
       expect(res.body.data.Movies).toHaveLength(2)
     })
 
-    it('Can update movies field --- return 200', async () => {
+    it('Can update associated movies on character --- return 200', async () => {
       const { id } = characterWithMovie2.body.data
 
       const newCharacter = {
