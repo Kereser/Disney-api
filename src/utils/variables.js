@@ -15,27 +15,31 @@ const NEWCHARACTER2 = {
   history: 'La historia de john aun esta por ser contada.',
   image: 'john.jpg',
 }
+const NEWCHARACTER3 = {
+  name: 'John Pelaez',
+  age: 25,
+  weight: 144.3,
+  history: 'La historia de john aun esta por ser contada.',
+  image: 'johnPelz.jpg',
+}
 const NEWMOVIE = {
   image: 'interestellar.jpg',
   title: 'interestellar',
   calification: 9,
   creationDate: '2019-05-12',
 }
-
 const NEWMOVIE2 = {
   image: 'El_Padrino.jpg',
   title: 'El Padrino',
   calification: 9.2,
   creationDate: '1999-03-12',
 }
-
 const NEWMOVIE3 = {
   image: 'El_Padrino_2.jpg',
   title: 'El Padrino 2',
   calification: 9.2,
   creationDate: '1999-03-12',
 }
-
 const NONVALIDCHARACTER = {
   name: 'Juanito perez',
   age: 23,
@@ -51,6 +55,7 @@ module.exports = {
   GENREMODEL,
   NEWCHARACTER,
   NEWCHARACTER2,
+  NEWCHARACTER3,
   NEWMOVIE,
   NONVALIDCHARACTER,
   NEWMOVIE2,

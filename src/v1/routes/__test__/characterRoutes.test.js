@@ -121,25 +121,87 @@ describe('Require characters already in db', () => {
       .send(characterMovie)
 
     const characterMovie2 = { ...Utils.NEWCHARACTER2 }
-    characterMovie.movies = [movie3.body.data.id]
+    characterMovie2.movies = [movie3.body.data.id]
     characterWithMovie2 = await api
       .post('/api/v1/characters')
       .send(characterMovie2)
+
+    const characterMovie3 = { ...Utils.NEWCHARACTER3 }
+    characterMovie3.movies = [movie3.body.data.id, movie1.body.data.id]
+    characterWithMovie3 = await api
+      .post('/api/v1/characters')
+      .send(characterMovie3)
   })
 
-  describe('Getting all movies', () => {
+  describe('Getting all characters', () => {
     it('Can get all character as an array with only name, image and id --- return 200', async () => {
       const res = await api.get('/api/v1/characters')
 
       expect(res.statusCode).toBe(200)
-      expect(res.body.data).toHaveLength(2)
-      expect(res.body.data[0].name).toEqual(characterWithMovie.body.data.name)
+      expect(res.body.data).toHaveLength(3)
+      expect(res.body.data[0].name).toBe(characterWithMovie.body.data.name)
       expect(res.body.data[0].id).toBeDefined()
       expect(res.body.data[0].weight).toBe(undefined)
     })
+
+    it('Can filter all characters by name --- return 200', async () => {
+      const res = await api.get('/api/v1/characters?name=john')
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.data).toHaveLength(2)
+      const names = res.body.data.map((cha) => cha.name.toLowerCase())
+      expect(names).toContain(Utils.NEWCHARACTER2.name.toLowerCase())
+      expect(names).toContain(Utils.NEWCHARACTER3.name.toLowerCase())
+    })
+
+    it('Can filter by age --- return 200', async () => {
+      const res = await api.get('/api/v1/characters?age=25')
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.data).toHaveLength(1)
+      expect(res.body.data[0].name).toBe(Utils.NEWCHARACTER3.name)
+    })
+
+    it('Can filter by weight --- return 200', async () => {
+      const res = await api.get('/api/v1/characters?weight=25.3')
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.data).toHaveLength(1)
+      expect(res.body.data[0].name).toBe(Utils.NEWCHARACTER2.name)
+    })
+
+    it('Can filter by movieId --- return 200', async () => {
+      const res = await api.get(
+        `/api/v1/characters?movie=${movie3.body.data.id}`,
+      )
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.data).toHaveLength(2)
+      const names = res.body.data.map((cha) => cha.name.toLowerCase())
+      expect(names).toContain(Utils.NEWCHARACTER2.name.toLowerCase())
+      expect(names).toContain(Utils.NEWCHARACTER3.name.toLowerCase())
+    })
+
+    it('Can filter by name and movieId --- return 200', async () => {
+      const res = await api.get(
+        `/api/v1/characters?movie=${movie1.body.data.id}&name=John`,
+      )
+
+      expect(res.statusCode).toBe(200)
+      expect(res.body.data).toHaveLength(1)
+      expect(res.body.data[0].name).toBe(Utils.NEWCHARACTER3.name)
+    })
   })
 
-  describe('Getting one movie', () => {
+  describe('Getting one character', () => {
+    it('Can get one character with valid id --- return 200', async () => {
+      const { id } = characterWithMovie.body.data
+      const resCharacter = await api.get(`/api/v1/characters/${id}`)
+
+      expect(resCharacter.statusCode).toBe(200)
+      expect(resCharacter.body.data.name).toBe(Utils.NEWCHARACTER.name)
+    })
+
     it('Can get one character by id with associated movies --- return 200', async () => {
       const { id } = characterWithMovie.body.data
       const resCharacter = await api.get(`/api/v1/characters/${id}`)
@@ -151,7 +213,11 @@ describe('Require characters already in db', () => {
       expect(resCharacter.body.data.image).toBe(
         characterWithMovie.body.data.image,
       )
-      expect(resCharacter.body.data.Movies[0].title).toBe(Utils.NEWMOVIE.title)
+      const titles = resCharacter.body.data.Movies.map((mov) =>
+        mov.title.toLowerCase(),
+      )
+      expect(titles).toContain(Utils.NEWMOVIE.title.toLowerCase())
+      expect(titles).toContain(Utils.NEWMOVIE2.title.toLowerCase())
       expect(resCharacter.body.data.Movies).toHaveLength(2)
     })
 
@@ -182,12 +248,12 @@ describe('Require characters already in db', () => {
 
       const allCharacters = await api.get('/api/v1/characters')
       expect(allCharacters.statusCode).toBe(200)
-      expect(allCharacters.body.data).toHaveLength(1)
+      expect(allCharacters.body.data).toHaveLength(2)
       expect(allCharacters.body.data[0].name).toBe(Utils.NEWCHARACTER.name)
     })
   })
 
-  describe('Updating user', () => {
+  describe('Updating Character', () => {
     it('Cannot update if character not found --- return 404', async () => {
       const id = uuidv4()
 
@@ -224,6 +290,10 @@ describe('Require characters already in db', () => {
 
       const res = await api.put(`/api/v1/characters/${id}`).send(newCharacter)
       expect(res.body.data.Movies).toHaveLength(3)
+      const titles = res.body.data.Movies.map((mov) => mov.title.toLowerCase())
+      expect(titles).toContain(Utils.NEWMOVIE.title.toLowerCase())
+      expect(titles).toContain(Utils.NEWMOVIE2.title.toLowerCase())
+      expect(titles).toContain(Utils.NEWMOVIE3.title.toLowerCase())
     })
 
     it('Cannot update if one or more movieIds are not valid --- return 400', async () => {

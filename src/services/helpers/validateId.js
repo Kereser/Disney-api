@@ -7,7 +7,7 @@ const {
 } = require('../../errors/errorsMessages')
 
 /**
- * Functions that helps verify id and user within db.
+ * Functions that helps verify id and return instance of the model.
  * @param {String} model
  * @param {String} id
  * @returns Models.

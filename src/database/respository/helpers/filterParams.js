@@ -1,7 +1,8 @@
-const { MOVIEMODEL } = require('../../../utils/variables')
+const { MOVIEMODEL, CHARACTERMODEL } = require('../../../utils/variables')
 const { Movie } = require('../../models/Movie')
 const { Op } = require('sequelize')
 const { DbError } = require('../../../errors/errorsMessages')
+const { Character } = require('../../models/Character')
 
 const constructFilters = (params, query) => {
   let filterArr = []
@@ -10,8 +11,23 @@ const constructFilters = (params, query) => {
       filterArr.push({ [param]: { [Op.iLike]: `%${query[param]}%` } })
     }
     //! Falta construir id de genre para filtrar por esto.
+
+    //* Parte para character
+    if (param === 'name') {
+      filterArr.push({ [param]: { [Op.iLike]: `%${query[param]}%` } })
+    }
+    if (param === 'age') {
+      filterArr.push({ [param]: query[param] })
+    }
+    if (param === 'weight') {
+      filterArr.push({ [param]: query[param] })
+    }
   }
-  return filterArr.length > 1 ? filterArr : filterArr[0]
+  return filterArr.length > 1
+    ? { [Op.and]: filterArr }
+    : filterArr.length === 1
+    ? filterArr[0]
+    : null
 }
 
 const filterParams = async (model, params, query) => {
@@ -19,31 +35,11 @@ const filterParams = async (model, params, query) => {
   if (model === MOVIEMODEL) {
     const filters = constructFilters(params, query)
 
-    if (filters instanceof Object) {
-      try {
-        movieRes = await Movie.findAll({
-          where: filters,
-        })
-        if (query.order === 'ASC') {
-          return movieRes.sort(function (a, b) {
-            if (a.title.toLowerCase() < b.title.toLowerCase()) return -1
-            if (a.title.toLowerCase() > b.title.toLowerCase()) return 1
-            return 0
-          })
-        } else {
-          return movieRes.sort(function (a, b) {
-            if (a.title.toLowerCase() < b.title.toLowerCase()) return 1
-            if (a.title.toLowerCase() > b.title.toLowerCase()) return -1
-            return 0
-          })
-        }
-      } catch (error) {
-        throw new DbError(error.message)
-      }
-    }
-
+    //TODO: HACER EL OBJFILTER SI SE ENCUENTRA CON QUERY.CHARACTER
     try {
-      movieRes = await Movie.findAll()
+      movieRes = await Movie.findAll({
+        where: filters,
+      })
       if (query.order === 'ASC') {
         return movieRes.sort(function (a, b) {
           if (a.title.toLowerCase() < b.title.toLowerCase()) return -1
@@ -60,9 +56,24 @@ const filterParams = async (model, params, query) => {
     } catch (error) {
       throw new DbError(error.message)
     }
-    // movieRes = Movie.findAll({
-    //   where: {[Op.and] : filters}
-    // })
+  }
+
+  if (model === CHARACTERMODEL) {
+    let characterRes
+    const filters = constructFilters(params, query)
+
+    const objFilter = query.movie
+      ? {
+          where: filters,
+          include: { model: Movie, where: { id: query.movie } },
+        }
+      : { where: filters }
+    try {
+      characterRes = await Character.findAll(objFilter)
+      return characterRes
+    } catch (error) {
+      throw new DbError(error.message)
+    }
   }
 }
 

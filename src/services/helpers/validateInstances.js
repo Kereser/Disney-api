@@ -1,6 +1,7 @@
 const movieRepository = require('../../database/respository/movieRepository')
+const characterRepository = require('../../database/respository/characterRepository')
 const { DbError } = require('../../errors/errorsMessages')
-const { MOVIEMODEL } = require('../../utils/variables')
+const { MOVIEMODEL, CHARACTERMODEL } = require('../../utils/variables')
 
 const validateInstances = async (model, ids) => {
   if (model === MOVIEMODEL) {
@@ -15,6 +16,22 @@ const validateInstances = async (model, ids) => {
     }
 
     return moviesInstance
+  }
+
+  if (model === CHARACTERMODEL) {
+    let characterInstances = []
+    for (const characterId of ids) {
+      try {
+        const characterIns = await characterRepository.getOneCharacter(
+          characterId,
+        )
+        characterInstances.push(characterIns)
+      } catch (error) {
+        throw new DbError(error.message)
+      }
+    }
+
+    return characterInstances
   }
 }
 

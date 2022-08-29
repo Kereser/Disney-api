@@ -1,5 +1,4 @@
 const characterRepository = require('../database/respository/characterRepository')
-const { BadRequestError } = require('../errors/errorsMessages')
 const { validateId } = require('./helpers/validateId')
 const { validateInstances } = require('./helpers/validateInstances')
 const { MOVIEMODEL } = require('../utils/variables')
@@ -7,9 +6,11 @@ const { CHARACTERMODEL } = require('../utils/variables')
 const { alreayInDb } = require('./helpers/alreayInDb')
 
 //! Limitar la cantidad de recursos q envio por query params.
-const getAllCharacters = async () => {
+const getAllCharacters = async (queryParams) => {
   try {
-    const allCharacters = await characterRepository.getAllCharacters()
+    const allCharacters = await characterRepository.getAllCharacters(
+      queryParams,
+    )
     return allCharacters.length > 0
       ? allCharacters.map((character) => {
           return {

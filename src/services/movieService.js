@@ -1,7 +1,8 @@
 const movieRepository = require('../database/respository/movieRepository')
-const { MOVIEMODEL } = require('../utils/variables')
+const { MOVIEMODEL, CHARACTERMODEL } = require('../utils/variables')
 const { alreayInDb } = require('./helpers/alreayInDb')
 const { validateId } = require('./helpers/validateId')
+const { validateInstances } = require('./helpers/validateInstances')
 
 const getAllMovies = async (query) => {
   try {
@@ -38,6 +39,31 @@ const createNewMovie = async (newMovie) => {
     throw error
   }
 
+  if (newMovie.characters) {
+    let characterInstances = []
+    try {
+      for (const characterId of newMovie.characters) {
+        await validateId(CHARACTERMODEL, characterId)
+      }
+      characterInstances = await validateInstances(
+        CHARACTERMODEL,
+        newMovie.characters,
+      )
+    } catch (error) {
+      throw error
+    }
+
+    try {
+      const movieRes = await movieRepository.createNewMovie(
+        newMovie,
+        characterInstances,
+      )
+      return await movieRepository.getOneMovie(movieRes.id)
+    } catch (error) {
+      throw error
+    }
+  }
+
   try {
     const responseMovie = await movieRepository.createNewMovie(newMovie)
     return responseMovie
@@ -49,6 +75,37 @@ const createNewMovie = async (newMovie) => {
 const updateOneMovie = async (movieId, fieldToUpdate) => {
   try {
     await validateId(MOVIEMODEL, movieId)
+  } catch (error) {
+    throw error
+  }
+
+  if (fieldToUpdate.characters) {
+    let characterInstances
+    try {
+      for (const characterId of fieldToUpdate.characters) {
+        await validateId(CHARACTERMODEL, characterId)
+      }
+      characterInstances = await validateInstances(
+        CHARACTERMODEL,
+        fieldToUpdate.characters,
+      )
+    } catch (error) {
+      throw error
+    }
+
+    try {
+      const movieRes = await movieRepository.updateOneMovie(
+        movieId,
+        fieldToUpdate,
+        characterInstances,
+      )
+      return movieRes
+    } catch (error) {
+      throw error
+    }
+  }
+
+  try {
     const movie = await movieRepository.updateOneMovie(movieId, fieldToUpdate)
     return movie
   } catch (error) {

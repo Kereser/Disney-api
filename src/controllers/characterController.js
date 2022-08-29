@@ -1,8 +1,9 @@
 const characterService = require('../services/characterService')
 
 const getAllCharacters = async (req, res) => {
+  const queryParams = req.query
   try {
-    const character = await characterService.getAllCharacters()
+    const character = await characterService.getAllCharacters(queryParams)
     res.send({ data: character })
   } catch (error) {
     res.status(error.statusCode).send({ errors: error.errMsg() })

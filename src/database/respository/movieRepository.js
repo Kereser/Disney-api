@@ -1,8 +1,8 @@
 const { DbError } = require('../../errors/errorsMessages')
 const { Movie } = require('../models/Movie')
-const { Op } = require('sequelize')
 const { filterParams } = require('./helpers/filterParams')
 const { MOVIEMODEL } = require('../../utils/variables')
+const { Character } = require('../models/Character')
 
 const getAllMovies = async (query) => {
   const params = Object.keys(query)
@@ -26,7 +26,10 @@ const getAllMovies = async (query) => {
 
 const getMovieByTitle = async (movieTitle) => {
   try {
-    const res = await Movie.findOne({ where: { title: movieTitle } })
+    const res = await Movie.findOne({
+      where: { title: movieTitle },
+      include: Character,
+    })
     return res ? res : null
   } catch (error) {
     throw new DbError(error.message)
@@ -35,25 +38,34 @@ const getMovieByTitle = async (movieTitle) => {
 
 const getOneMovie = async (id) => {
   try {
-    const movie = await Movie.findByPk(id)
+    const movie = await Movie.findByPk(id, { include: Character })
     return movie ? movie : null
   } catch (error) {
     throw new DbError(error.message)
   }
 }
 
-const createNewMovie = async (newMovie) => {
+const createNewMovie = async (newMovie, characterInstances) => {
   try {
-    const movie = await Movie.create(newMovie)
-    return movie
+    const createdMovie = await Movie.create(newMovie)
+    if (characterInstances) {
+      await createdMovie.addCharacters(characterInstances)
+    }
+    return createdMovie
   } catch (error) {
     throw new DbError(error.message)
   }
 }
 
-const updateOneMovie = async (movieId, fieldToUpdate) => {
+const updateOneMovie = async (movieId, fieldToUpdate, characterInstances) => {
   try {
-    const movie = await Movie.findByPk(movieId)
+    const movie = await Movie.findByPk(movieId, { include: Character })
+    if (characterInstances) {
+      delete fieldToUpdate.characters
+      fieldToUpdate.Characters = characterInstances
+      movie.set(fieldToUpdate)
+      return await movie.save()
+    }
     movie.set(fieldToUpdate)
     return await movie.save()
   } catch (error) {
