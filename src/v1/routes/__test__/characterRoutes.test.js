@@ -6,6 +6,19 @@ const { v4: uuidv4 } = require('uuid')
 const api = supertest(app)
 
 describe('Not require characters in db', () => {
+  describe('Validate fields', () => {
+    it('Cannot create character if no name --- return 400', async () => {
+      const newCharacter = {
+        image: 'myImage.jpg',
+        age: 23,
+      }
+
+      const res = await api.post('/api/v1/characters').send(newCharacter)
+      expect(res.statusCode).toBe(400)
+      expect(res.body.errors[0].message).toBe('Name must be provided')
+    })
+  })
+
   describe('Creating a character', () => {
     it('Can create new Character with simple fields --- return 201', async () => {
       const res = await api.post('/api/v1/characters').send(Utils.NEWCHARACTER)

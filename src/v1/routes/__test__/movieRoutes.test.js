@@ -7,7 +7,7 @@ const api = supertest(app)
 
 describe('Not require movies in db', () => {
   describe('Validate fields', () => {
-    it("Cannot create movie if there's no title --- return 400", async () => {
+    it("Cannot create movie if there's no title or creation date --- return 400", async () => {
       //* require Title
       let movie = {
         image: 'Mipelicula.jpg',
