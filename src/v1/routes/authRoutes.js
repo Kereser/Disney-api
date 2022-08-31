@@ -12,7 +12,7 @@ router.post(
       .trim()
       .notEmpty()
       .isLength({ min: 4 })
-      .withMessage('You must supply a password'),
+      .withMessage('Password doesnt meet minimun requirements'),
   ],
   requestValidator,
   authController.login,
@@ -26,7 +26,7 @@ router.post(
       .trim()
       .notEmpty()
       .isLength({ min: 4 })
-      .withMessage('You must supply a password'),
+      .withMessage('Password doesnt meet minimun requirements'),
   ],
   requestValidator,
   authController.register,

@@ -6,6 +6,30 @@ const { v4: uuidv4 } = require('uuid')
 const api = supertest(app)
 
 describe('Not require movies in db', () => {
+  describe('Validate fields', () => {
+    it("Cannot create movie if there's no title --- return 400", async () => {
+      //* require Title
+      let movie = {
+        image: 'Mipelicula.jpg',
+        creationDate: '2021-05-12',
+      }
+
+      let res = await api.post('/api/v1/movies').send(movie)
+      expect(res.statusCode).toBe(400)
+      expect(res.body.errors[0].message).toBe('Title must be provided')
+
+      //* require creation date
+      movie = {
+        image: 'Mipelicula.jpg',
+        title: 'My title mymy',
+      }
+
+      res = await api.post('/api/v1/movies').send(movie)
+      expect(res.statusCode).toBe(400)
+      expect(res.body.errors[0].message).toBe('Creation date must be provided')
+    })
+  })
+
   describe('Creting movie', () => {
     it('Can create a movie with basic fields --- return 201', async () => {
       const res = await api.post('/api/v1/movies').send(Utils.NEWMOVIE)

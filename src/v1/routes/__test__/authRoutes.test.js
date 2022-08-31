@@ -18,7 +18,7 @@ describe('Not required users in db', () => {
 
       expect(resPassword.statusCode).toBe(400)
       expect(resPassword.body.errors[0].message).toBe(
-        'You must supply a password',
+        'Password doesnt meet minimun requirements',
       )
     })
   })
@@ -53,7 +53,7 @@ describe('Not required users in db', () => {
 
       expect(resPassword.statusCode).toBe(400)
       expect(resPassword.body.errors[0].message).toBe(
-        'You must supply a password',
+        'Password doesnt meet minimun requirements',
       )
     })
   })
