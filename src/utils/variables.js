@@ -1,6 +1,7 @@
 const MOVIEMODEL = 'Movie'
 const CHARACTERMODEL = 'Character'
 const GENREMODEL = 'Genre'
+const USERMODEL = 'User'
 const NEWCHARACTER = {
   name: 'Juanito perez',
   age: 23,
@@ -62,7 +63,7 @@ const NONVALIDUSER1 = {
 }
 const NONVALIDUSER2 = {
   email: 'test2@test2.com',
-  password: 'pass',
+  password: 'pas',
 }
 
 module.exports = {
@@ -80,4 +81,5 @@ module.exports = {
   USER2,
   NONVALIDUSER1,
   NONVALIDUSER2,
+  USERMODEL,
 }

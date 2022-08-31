@@ -1,9 +1,35 @@
 const express = require('express')
-
+const { body } = require('express-validator')
 const router = express.Router()
+const authController = require('../../controllers/authController')
+const { requestValidator } = require('../../middlewares/requestValidator')
 
-router.post('/login')
+router.post(
+  '/login',
+  [
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('password')
+      .trim()
+      .notEmpty()
+      .isLength({ min: 4 })
+      .withMessage('You must supply a password'),
+  ],
+  requestValidator,
+  authController.login,
+)
 
-router.post('/register')
+router.post(
+  '/register',
+  [
+    body('email').isEmail().withMessage('Email must be valid'),
+    body('password')
+      .trim()
+      .notEmpty()
+      .isLength({ min: 4 })
+      .withMessage('You must supply a password'),
+  ],
+  requestValidator,
+  authController.register,
+)
 
 module.exports = router
