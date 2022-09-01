@@ -1,4 +1,4 @@
-const characterRepository = require('../database/respository/characterRepository')
+const characterRepository = require('../database/repository/characterRepository')
 const { validateId } = require('./helpers/validateId')
 const { validateInstances } = require('./helpers/validateInstances')
 const { MOVIEMODEL } = require('../utils/variables')

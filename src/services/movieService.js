@@ -1,4 +1,4 @@
-const movieRepository = require('../database/respository/movieRepository')
+const movieRepository = require('../database/repository/movieRepository')
 const { MOVIEMODEL, CHARACTERMODEL } = require('../utils/variables')
 const { alreayInDb } = require('./helpers/alreayInDb')
 const { validateId } = require('./helpers/validateId')

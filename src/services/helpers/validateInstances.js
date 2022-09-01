@@ -1,5 +1,5 @@
-const movieRepository = require('../../database/respository/movieRepository')
-const characterRepository = require('../../database/respository/characterRepository')
+const movieRepository = require('../../database/repository/movieRepository')
+const characterRepository = require('../../database/repository/characterRepository')
 const { DbError } = require('../../errors/errorsMessages')
 const { MOVIEMODEL, CHARACTERMODEL } = require('../../utils/variables')
 

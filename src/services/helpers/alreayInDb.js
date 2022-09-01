@@ -1,6 +1,6 @@
 const { MOVIEMODEL, CHARACTERMODEL } = require('../../utils/variables')
-const movieRepository = require('../../database/respository/movieRepository')
-const characterRepository = require('../../database/respository/characterRepository')
+const movieRepository = require('../../database/repository/movieRepository')
+const characterRepository = require('../../database/repository/characterRepository')
 const { BadRequestError } = require('../../errors/errorsMessages')
 
 const alreayInDb = async (model, instanceToCheck) => {

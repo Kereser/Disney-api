@@ -4,6 +4,33 @@ const { filterParams } = require('./helpers/filterParams')
 const { MOVIEMODEL } = require('../../utils/variables')
 const { Character } = require('../models/Character')
 
+/**
+ *  @openapi
+ *  components:
+ *    schemas:
+ *      Movie:
+ *        type: object
+ *        properties:
+ *          id:
+ *            type: string
+ *            example: 61dbae02-c147-4e28-863c-db7bd402b2d6
+ *          title:
+ *            type: string
+ *            example: Interestellar
+ *          image:
+ *            type: string
+ *            example: interestellar.jpg
+ *          creationDate:
+ *            type: string
+ *            example: '14-05-2018'
+ *          calification:
+ *            type: double
+ *            example: 9.1
+ *        required:
+ *          - title
+ *          - creationDate
+ */
+
 const getAllMovies = async (query) => {
   const params = Object.keys(query)
   let movieRes

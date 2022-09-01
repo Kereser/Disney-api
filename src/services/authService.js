@@ -1,4 +1,4 @@
-const userRepository = require('../database/respository/userRepository')
+const userRepository = require('../database/repository/userRepository')
 const { BadRequestError, DbError } = require('../errors/errorsMessages')
 const jwt = require('jsonwebtoken')
 const passwordUtils = require('../utils/passwordUtils')
