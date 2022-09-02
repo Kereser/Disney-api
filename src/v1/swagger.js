@@ -10,8 +10,10 @@ const options = {
   apis: [
     './src/v1/routes/movieRoutes.js',
     './src/v1/routes/characterRoutes.js',
+    './src/v1/routes/authRoutes.js',
     './src/database/Repository/movieRepository.js',
     './src/database/Repository/characterRepository.js',
+    './src/database/Repository/userRepository.js',
   ],
 }
 

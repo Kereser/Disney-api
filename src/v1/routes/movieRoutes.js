@@ -69,7 +69,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/movies/{movieId}:
@@ -141,7 +141,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/movies/:
@@ -232,7 +232,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/movies/{movieId}:
@@ -330,7 +330,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/movies/{movieId}:
@@ -393,7 +393,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  */
 
 router.get('/', movieController.getAllMovies)

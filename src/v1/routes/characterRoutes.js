@@ -72,7 +72,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/characters/{characterId}:
@@ -144,7 +144,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/characters/:
@@ -237,7 +237,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/characters/{characterId}:
@@ -338,7 +338,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  *
  *  @openapi
  *  /api/v1/characters/{characterId}:
@@ -401,7 +401,7 @@ const router = express.Router()
  *                      properties:
  *                        message:
  *                          type: string
- *                          example: "Some db error message"
+ *                          example: "Unexpected error"
  */
 
 router.get('/', characterController.getAllCharacters)
