@@ -22,10 +22,26 @@ const { Character } = require('../models/Character')
  *            example: interestellar.jpg
  *          creationDate:
  *            type: string
- *            example: '14-05-2018'
+ *            format: date
+ *            pattern: /([0-9]{4})-(?:[0-9]{2})-([0-9]{2})/
+ *            example: '2018-05-12'
  *          calification:
  *            type: double
  *            example: 9.1
+ *          createdAt:
+ *            type: string
+ *            format: date
+ *            pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2}T[0-9]{2}):[0-9]{2}:[0-9]{2}.[0-9]{3}Z
+ *            example: 2022-09-02T16:04:11.647Z
+ *          updatedAt:
+ *            type: string
+ *            format: date
+ *            pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2}T[0-9]{2}):[0-9]{2}:[0-9]{2}.[0-9]{3}Z
+ *            example: 2022-09-02T16:04:11.647Z
+ *          Characters:
+ *            type: array
+ *            items:
+ *              $ref: '#/components/schemas/Character'
  *        required:
  *          - title
  *          - creationDate

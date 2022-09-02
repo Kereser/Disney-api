@@ -4,6 +4,47 @@ const { Character } = require('../models/Character')
 const { Movie } = require('../models/Movie')
 const { filterParams } = require('./helpers/filterParams')
 
+/**
+ *  @openapi
+ *  components:
+ *    schemas:
+ *      Character:
+ *        type: object
+ *        properties:
+ *          id:
+ *            type: string
+ *            example: 61dbae02-c147-4e28-863c-db7bd402b2d6
+ *          name:
+ *            type: string
+ *            example: Bradd pitt
+ *          image:
+ *            type: string
+ *            example: brad_pitt.jpg
+ *          age:
+ *            type: integer
+ *            example: 50
+ *          weight:
+ *            type: double
+ *            example: 170.2
+ *          history:
+ *            type: string
+ *            example: Actor which...
+ *          createdAt:
+ *            type: string
+ *            format: date
+ *            pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2}T[0-9]{2}):[0-9]{2}:[0-9]{2}.[0-9]{3}Z
+ *            example: 2022-09-02T16:04:11.647Z
+ *          updatedAt:
+ *            type: string
+ *            format: date
+ *            pattern: ([0-9]{4})-([0-9]{2})-([0-9]{2}T[0-9]{2}):[0-9]{2}:[0-9]{2}.[0-9]{3}Z
+ *            example: 2022-09-02T16:04:11.647Z
+ *          Movies:
+ *            type: array
+ *            items:
+ *              $ref: '#/components/schemas/Movie'
+ */
+
 const getAllCharacters = async (queryParams) => {
   const params = Object.keys(queryParams)
   if (params.length === 0) {

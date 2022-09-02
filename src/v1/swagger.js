@@ -10,6 +10,7 @@ const options = {
   apis: [
     './src/v1/routes/movieRoutes.js',
     './src/database/Repository/movieRepository.js',
+    './src/database/Repository/characterRepository.js',
   ],
 }
 

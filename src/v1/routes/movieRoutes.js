@@ -54,7 +54,7 @@ const router = express.Router()
  *                          example: interestellar.jpg
  *                        creationDate:
  *                          type: string
- *                          example: '14-05-2018'
+ *                          example: '2018-05-12'
  *        5XX:
  *          description: FAILED
  *          content:
@@ -91,11 +91,42 @@ const router = express.Router()
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Movie'
+ *                type: object
+ *                properties:
+ *                  data:
+ *                    type: array
+ *                    items:
+ *                      $ref: '#/components/schemas/Movie'
  *        400:
  *          description: 'Malformatted id'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'movieId must be a valid id'
  *        404:
  *          description: 'Movie with the request Id not found'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'Movie not found'
  *        5XX:
  *          description: FAILED
  *          content:
@@ -125,32 +156,244 @@ const router = express.Router()
  *            application/json:
  *              schema:
  *                type: object
+ *                required: [title, creationDate]
  *                properties:
- *                  data:
+ *                  title:
+ *                    type: string
+ *                    example: Interestellar
+ *                  image:
+ *                    type: string
+ *                    example: interestellar.jpg
+ *                  creationDate:
+ *                    type: string
+ *                    example: '2018-05-12'
+ *                  calification:
+ *                    type: double
+ *                    example: 9.1
+ *                  characters:
  *                    type: array
  *                    items:
- *                      type: object
- *                      required: [title, creationDate]
- *                      properties:
- *                        title:
- *                          type: string
- *                          example: Interestellar
- *                        image:
- *                          type: string
- *                          example: interestellar.jpg
- *                        creationDate:
- *                          type: string
- *                          example: '14-05-2018'
- *                        calification:
- *                          type: double
- *                          example: 9.2
+ *                      type: string
+ *                      example: [61dbae02-c147-4e28-863c-db7bd402b2d6, opdbae02-c147-4e28-863c-db7bd4025grt]
+ *
  *      responses:
  *        201:
  *          description: 'Details of the added movie'
  *          content:
  *            application/json:
  *              schema:
- *                $ref: '#/components/schemas/Movie'
+ *                type: object
+ *                properties:
+ *                  data:
+ *                    type: array
+ *                    items:
+ *                      $ref: '#/components/schemas/Movie'
+ *        400:
+ *          description: 'Malformatted id'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'movieId must be a valid id || characterId must be a valid id'
+ *        404:
+ *          description: 'Movie with the request Id not found'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'Movie not found || Character not found'
+ *        5XX:
+ *          description: FAILED
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: "Some db error message"
+ *
+ *  @openapi
+ *  /api/v1/movies/{movieId}:
+ *    put:
+ *      tags:
+ *        - Movies
+ *      description: 'Update a movie'
+ *      parameters:
+ *        - name: movieId
+ *          in: path
+ *          description: ID of the request movie
+ *          required: true
+ *          schema:
+ *            type: string
+ *            example: 61dbae02-c147-4e28-863c-db7bd402b2d6
+ *      requestBody:
+ *        description: 'Fields to update on movie'
+ *        required: true
+ *        content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  title:
+ *                    type: string
+ *                    example: Interestellar
+ *                  image:
+ *                    type: string
+ *                    example: interestellar.jpg
+ *                  creationDate:
+ *                    type: string
+ *                    example: '2018-05-12'
+ *                  calification:
+ *                    type: double
+ *                    example: 9.1
+ *                  characters:
+ *                    type: array
+ *                    items:
+ *                      type: string
+ *                      example: [61dbae02-c147-4e28-863c-db7bd402b2d6, opdbae02-c147-4e28-863c-db7bd4025grt]
+ *
+ *      responses:
+ *        201:
+ *          description: 'Details of the modified movie'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  data:
+ *                    type: array
+ *                    items:
+ *                      $ref: '#/components/schemas/Movie'
+ *        400:
+ *          description: 'Malformatted id'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'movieId must be a valid id || characterId must be a valid id'
+ *        404:
+ *          description: 'Movie with the request Id not found'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'Movie not found || Character not found'
+ *        5XX:
+ *          description: FAILED
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: "Some db error message"
+ *
+ *  @openapi
+ *  /api/v1/movies/{movieId}:
+ *    delete:
+ *      tags:
+ *        - Movies
+ *      description: 'Deleting a movie'
+ *      parameters:
+ *        - name: movieId
+ *          in: path
+ *          description: ID of the request movie
+ *          required: true
+ *          schema:
+ *            type: string
+ *            example: 61dbae02-c147-4e28-863c-db7bd402b2d6
+ *      responses:
+ *        204:
+ *          description: 'Movie successfully deleted'
+ *        400:
+ *          description: 'Malformatted id'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'movieId must be a valid id'
+ *        404:
+ *          description: 'Movie with the request Id not found'
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: 'Movie not found'
+ *        5XX:
+ *          description: FAILED
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  errors:
+ *                    type: array
+ *                    items:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                          example: "Some db error message"
  */
 
 router.get('/', movieController.getAllMovies)
