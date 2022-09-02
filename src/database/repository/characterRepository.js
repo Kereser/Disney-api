@@ -10,6 +10,7 @@ const { filterParams } = require('./helpers/filterParams')
  *    schemas:
  *      Character:
  *        type: object
+ *        required: [name]
  *        properties:
  *          id:
  *            type: string
